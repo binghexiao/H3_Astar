@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+	<Type Name="pareto::front&lt;double,2,unsigned __int64,pareto::r_tree&lt;double,2,unsigned __int64,std::less&lt;double&gt;,std::allocator&lt;std::pair&lt;pareto::point&lt;double,2,void&gt; const ,unsigned __int64&gt;&gt;&gt;&gt;">
+		<DisplayString>{{ size={data_.size_} }}</DisplayString>
+		<Expand>
+			<!--<ExpandedItem>data_.root_->branches_</ExpandedItem>-->
+			<!--<Item Name="[arr]">data_.root_->branches_</Item>-->
+			<Item Name="[value]">data_.root_->branches_._Elems</Item>
+			<!--<ArrayItems>
+				<Size>>data_.root_->branches_._Elems._Mylast - >data_.root_->branches_._Elems._Myfirst</Size>
+				<ValuePointer>data_.root_->branches_._Elems._Myfirst</ValuePointer>
+			</ArrayItems>-->
+		</Expand>
+	</Type>
+	<Type Name ="std::pair&lt;unsigned __int64 const ,Point&gt;">
+		<DisplayString>{{op = {second.op}; cl = {second.cl} }}</DisplayString>
+	</Type>
+	<Type Name ="Point">
+		<DisplayString>{{op = {op}; cl = {cl} }}</DisplayString>
+		<Expand>
+			<Item Name="op">op</Item>
+			<Item Name="cl">cl</Item>
+		</Expand>
+	</Type>
+	<Type Name="pareto::r_tree&lt;double,2,unsigned __int64,std::less&lt;double&gt;,std::allocator&lt;std::pair&lt;pareto::point&lt;double,2,void&gt; const ,unsigned __int64&gt;&gt;&gt;::branch_variant">
+		<Expand>
+			<Item Name="value">values_</Item>
+			<Item Name="parent">second</Item>
+		</Expand>
+	</Type>
+	<Type Name="pareto::point&lt;double,2,void&gt;">
+		<DisplayString>{{value = {values_._Elems[0]},{values_._Elems[1]}}}</DisplayString>
+	</Type>
+</AutoVisualizer>

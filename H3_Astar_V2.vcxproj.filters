@@ -1,0 +1,174 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="头文件\Multi_Object">
+      <UniqueIdentifier>{60461475-dd95-4d17-b8c3-c76fe80f590e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Start.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Astar.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Util.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Multi_Astar.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Astar.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="h3api.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Node.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Util.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="type_def.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Task.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="threadPool.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Multi_Astar.h">
+      <Filter>头文件\Multi_Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Point.h">
+      <Filter>头文件\Multi_Object</Filter>
+    </ClInclude>
+    <ClInclude Include="parameter.h">
+      <Filter>头文件\Multi_Object</Filter>
+    </ClInclude>
+    <ClInclude Include="include\pareto\common\common.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\pareto\common\default_allocator.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\pareto\common\demangle.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\pareto\common\hypervolume.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\pareto\common\keywords.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\pareto\common\metaprogramming.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\pareto\common\operators.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\pareto\matplot\archive.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\pareto\matplot\front.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\pareto\query\disjoint.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\pareto\query\intersects.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\pareto\query\nearest.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\pareto\query\predicate_list.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\pareto\query\predicate_variant.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\pareto\query\predicates.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\pareto\query\query_box.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\pareto\query\satisfies.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\pareto\query\within.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\pareto\archive.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\pareto\boost_tree.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\pareto\front.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\pareto\implicit_tree.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\pareto\kd_tree.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\pareto\point.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\pareto\quad_tree.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\pareto\r_star_tree.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\pareto\r_tree.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\pareto\spatial_map.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="NatvisFile.natvis" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="h3.dll" />
+    <None Include="test.html" />
+    <None Include="多粒度.geojson" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="log.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="H3_Astar_V2.rc">
+      <Filter>资源文件</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="h3.lib">
+      <Filter>资源文件</Filter>
+    </Library>
+  </ItemGroup>
+</Project>
