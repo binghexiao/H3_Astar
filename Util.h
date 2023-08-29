@@ -12,6 +12,7 @@
 #include "type_def.h"
 #include <iomanip>
 
+// ²âÊÔ ÎûÎû
 class Util {
 public:
     static double PI;
