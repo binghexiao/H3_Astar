@@ -1,5 +1,5 @@
 #include "Astar.h"
-
+// ×¢ÊÍ
 Astar::Astar(H3_N& PointMap, H3_D& DEM, H3_D& Comprehensive)
 {
 	this->PointMap = PointMap;
