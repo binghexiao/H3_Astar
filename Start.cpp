@@ -26,8 +26,8 @@ void MultihierarchyVsOrdinary() {
     //多层次格网层级
     int target_level = 16;
     //基准格网数据路径
-    string filepath = "C:\\Users\\69025\\Desktop\\路径规划\\论文实验\\英文论文实验\\改进算法后实验结果\\实验数据_10.csv";
-    string m_filepath = "C:\\Users\\69025\\Desktop\\路径规划\\论文实验\\英文论文实验\\改进算法后实验结果\\other_compact_h3_res=10_算法用.csv";
+    string filepath = "D:/桌面/部分实验数据_10.csv";
+    string m_filepath = "D:/桌面/路径规划/已有资料/改进算法后实验结果/other_compact_h3_res=10_算法用.csv";
 
     cout << "加载数据..." << endl;
     // 读取基准格网数据
@@ -134,7 +134,7 @@ void MultiObjectVsSingleObject() {
     //基准格网数据路径
     // string filepath = "C:\\Users\\69025\\Desktop\\路径规划\\论文实验\\英文论文实验\\改进算法后实验结果\\实验数据_10.csv";
     //string filepath = "D:\\桌面\\改进算法后实验结果\\实验数据_10.csv";
-    string filepath = "D:/桌面/路径规划/已有资料/改进算法后实验结果/实验数据_10.csv";
+    string filepath = "D:/桌面/966数据_10.csv";
     // string m_filepath = "C:\\Users\\69025\\Desktop\\路径规划\\论文实验\\英文论文实验\\改进算法后实验结果\\other_compact_h3_res=10_算法用.csv";
     //string m_filepath = "D:\\桌面\\改进算法后实验结果\\other_compact_h3_res=10_算法用.csv";
     string m_filepath = "D:/桌面/路径规划/已有资料/改进算法后实验结果/other_compact_h3_res=10_算法用.csv";
@@ -142,16 +142,19 @@ void MultiObjectVsSingleObject() {
     // 读取基准格网数据
     Util::loadingData(PointMap, DEM, Comprehensive, Factor, level, filepath);   
     // 读取多层次格网数据，并生成多层次格网地图
-    Util::MultiObjectMultiHierarchy(PointMap, DEM, Comprehensive, Factor, level, m_filepath);
+    //Util::MultiObjectMultiHierarchy(PointMap, DEM, Comprehensive, Factor, level, m_filepath);
     // 多粒度模型
-    H3Index h3_start = 0x8a400889c157fff;
-    H3Index h3_end = 0x8a400881b487fff;
+    /*H3Index h3_start = 0x8a400889c157fff;
+    H3Index h3_end = 0x8a400881b487fff;*/
+    H3Index h3_start = 0x8a4008b98a6ffff;
+    H3Index h3_end = 0x8a4008b9dd17fff;
+
     //H3Index h3_start = 0x8a400885b047fff;
     //H3Index h3_end = 0x8a400885914ffff;
     vector<pair<vector<H3Index>, point_type>> result;
     cout << "寻路启动..." << endl;
-    cout << "多粒度：" << endl;
-    log << "多粒度：" << endl;
+    /*cout << "多粒度：" << endl;
+    log << "多粒度：" << endl;*/
     // 实验次数
     int Turn = 1;
     //用于统计时间数据
@@ -163,57 +166,60 @@ void MultiObjectVsSingleObject() {
     vector<double> mean;//坡度均值
     vector<double> dev;//坡度标准差
     vector<vector<double>> factor;
-    for (int i = 0; i < Turn; i++) {
-        double time;
-        result = Util::MultiObjectMultiHierarchySearch(PointMap, DEM, Comprehensive, target_level, level, h3_start, h3_end, log, Max_of_the_Number_of_Open_Grid, Traverses_the_Number_of_Grid, time);
-        if (i == 0) {
-            Util::AnalysisData(PointMap[target_level], DEM[target_level], Comprehensive[target_level], result, Length_of_Path);
-            Util::ComputeFactor(result, Factor[target_level], factor);
-            Util::ComputeGrad(result, DEM[target_level], mean, dev);
-        }
-        totaltime += time;
-    }
-    if (result.size() == 0)
-        cout << "未找到路径" << endl;
-    log << "时间：" << totaltime / Turn << "  Open队列最大深度：" << Max_of_the_Number_of_Open_Grid / Turn << " 格网遍历数：" << Traverses_the_Number_of_Grid / Turn << ";" << endl;
-    cout << "时间：" << totaltime / Turn << "  Open队列最大深度：" << Max_of_the_Number_of_Open_Grid / Turn << " 格网遍历数：" << Traverses_the_Number_of_Grid / Turn << ";" << endl;
-    // 分路径
-    for (int i = 0; i < result.size(); i++) {
-        log << "Path {" << i << "} :";
-        cout << "Path {" << i << "} :";
-        log << "路径格网数：" << result[i].first.size() << "; 路径长度：" << Length_of_Path[i] << "; 因子：";
-        cout << "路径格网数：" << result[i].first.size() << "; 路径长度：" << Length_of_Path[i] << "; 因子：";
-        // 因子
-        for (int j = 0; j < factor[i].size(); j++)
-        {
-            log << factor[i][j] * 100 << " ";
-            cout << factor[i][j] * 100 << " ";
-        }
-            
-        // 坡度均值与标准差
-        log << "; 均值：" << mean[i] << "; 标准差：" << dev[i] << endl;
-        cout << "; 均值：" << mean[i] << "; 标准差：" << dev[i] << endl;
-    }
-    //ofstream outfile("D:\\桌面\\改进算法后实验结果\\多粒度.geojson");
-    ofstream outfile("D:/桌面/多粒度.geojson");
-    outfile << Util::getGeoJson(result, "多粒度");
-    outfile.close();
+    //for (int i = 0; i < Turn; i++) {
+    //    double time;
+    //    result = Util::MultiObjectMultiHierarchySearch(PointMap, DEM, Comprehensive, target_level, level, h3_start, h3_end, log, Max_of_the_Number_of_Open_Grid, Traverses_the_Number_of_Grid, time);
+    //    if (i == 0) {
+    //        Util::AnalysisData(PointMap[target_level], DEM[target_level], Comprehensive[target_level], result, Length_of_Path);
+    //       Util::ComputeFactor(result, Factor[target_level], factor);
+    //        Util::ComputeGrad(result, DEM[target_level], mean, dev);
+    //    }
+    //    totaltime += time;
+    //}
+    //if (result.size() == 0)
+    //    cout << "未找到路径" << endl;
+    //log << "时间：" << totaltime / Turn << "  Open队列最大深度：" << Max_of_the_Number_of_Open_Grid / Turn << " 格网遍历数：" << Traverses_the_Number_of_Grid / Turn << ";" << endl;
+    //cout << "时间：" << totaltime / Turn << "  Open队列最大深度：" << Max_of_the_Number_of_Open_Grid / Turn << " 格网遍历数：" << Traverses_the_Number_of_Grid / Turn << ";" << endl;
+    //// 分路径
+    //for (int i = 0; i < result.size(); i++) {
+    //    log << "Path {" << i << "} :";
+    //    cout << "Path {" << i << "} :";
+    //    log << "路径格网数：" << result[i].first.size() << "; 路径长度：" << Length_of_Path[i] << "; 因子：";
+    //    cout << "路径格网数：" << result[i].first.size() << "; 路径长度：" << Length_of_Path[i] << "; 因子：";
+    //    // 因子
+    //    for (int j = 0; j < factor[i].size(); j++)
+    //    {
+    //        log << factor[i][j] * 100 << " ";
+    //        cout << factor[i][j] * 100 << " ";
+    //    }
+    //        
+    //    // 坡度均值与标准差
+    //    log << "; 均值：" << mean[i] << "; 标准差：" << dev[i] << endl;
+    //    cout << "; 均值：" << mean[i] << "; 标准差：" << dev[i] << endl;
+    //}
+    ////ofstream outfile("D:\\桌面\\改进算法后实验结果\\多粒度.geojson");
+    //ofstream outfile("D:/桌面/多粒度.geojson");
+    //outfile << Util::getGeoJson(result, "多粒度");
+    //outfile.close();
     cout << "普通：" << endl;
     log << "普通：" << endl;
-    totaltime = 0;
-    Max_of_the_Number_of_Open_Grid = 0;
+    //totaltime = 0;
+  /*  Max_of_the_Number_of_Open_Grid = 0;
     Traverses_the_Number_of_Grid = 0;
     Length_of_Path = vector<double>();
     mean = vector<double>();
     dev = vector<double>();
-    factor = vector<vector<double>>();
+    factor = vector<vector<double>>();*/
     for (int i = 0; i < Turn; i++) {
         double time;
+        //result = Util::MultiObjectMultiHierarchySearch(PointMap, DEM, Comprehensive, level, level, h3_start, h3_end, log, Max_of_the_Number_of_Open_Grid, Traverses_the_Number_of_Grid, time);
         result = Util::MultiObjectMultiHierarchySearch(PointMap, DEM, Comprehensive, level, level, h3_start, h3_end, log, Max_of_the_Number_of_Open_Grid, Traverses_the_Number_of_Grid, time);
         if (i == 0) {
-            Util::AnalysisData(PointMap[target_level], DEM[target_level], Comprehensive[target_level], result, Length_of_Path);
-            Util::ComputeFactor(result, Factor[target_level], factor);
-            Util::ComputeGrad(result, DEM[target_level], mean, dev);
+            //Util::AnalysisData(PointMap[target_level], DEM[target_level], Comprehensive[target_level], result, Length_of_Path);
+            Util::AnalysisData(PointMap[level], DEM[level], Comprehensive[level], result, Length_of_Path);
+            cout << "analysisData运行完毕" << endl;
+            Util::ComputeFactor(result, Factor[level], factor);
+            Util::ComputeGrad(result, DEM[level], mean, dev);
         }
         totaltime += time;
     }
@@ -245,9 +251,9 @@ void MultiObjectVsSingleObject() {
     outfile1 << Util::getGeoJson(result, "普通");
     outfile1.close();
     log.close();
-    string showInKepler = "python D:/工作空间/pyworkspace/Test/newAlgorithm/start.py -n 多粒度 -m 普通";
-    //string showInKepler = "python D:\\PythonProject\\Test\\newAlgorithm\\start.py -n 多粒度 -m 普通";
-    system(showInKepler.c_str());
+//    string showInKepler = "python D:/工作空间/pyworkspace/Test/newAlgorithm/start.py -n 多粒度 -m 普通";
+//    //string showInKepler = "python D:\\PythonProject\\Test\\newAlgorithm\\start.py -n 多粒度 -m 普通";
+//    system(showInKepler.c_str());
 }
 
 int main()

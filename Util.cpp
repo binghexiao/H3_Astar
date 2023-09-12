@@ -406,9 +406,14 @@ void Util::ComputeFactor(vector<pair<vector<H3Index>, point_type>>& result, H3_V
     cout << "运行computerFactor" << endl;
     // vector<double>{grass, water, forest, building, soft, hard, brush};
     for (int i = 0; i < result.size(); i++) {
+        // 针对result的每个路径 在factor后面加一个七位向量
         factor.push_back(vector<double>(7, 0));
         double total = 0;
         for (int j = 0; j < result[i].first.size(); j++) {
+            // 遍历这条路径的所有格网
+            // 统计这条路径的所有 factor 的和
+            // 1. result[i] 代表一条路径 pair<vector<H3index>, point_type>
+            // 2. result[i].first 代表 vector<H3index>
             for (int k = 0; k < 7; k++) {
                 total += Factor[result[i].first[j]][k];
                 factor[i][k] += Factor[result[i].first[j]][k];
