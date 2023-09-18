@@ -16,5 +16,6 @@ typedef std::pair<H3Index, std::vector<double>> P_H3_V;
 typedef std::pair<double, H3Index> P_D_H3;
 /////
 typedef std::unordered_map<H3Index, Point> H3_P;
+
 #endif
 

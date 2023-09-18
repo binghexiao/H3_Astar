@@ -82,4 +82,8 @@ public:
     static inline vector<double> geo2xyz(GeoPoint& point);
 
     static double angleOflocation(GeoPoint l1, GeoPoint l2, GeoPoint l3);
+
+    static void loading_site_data(string filePath, H3_D& cellList);
+
+    static void SetNumber(H3_D &sitelist);
 };

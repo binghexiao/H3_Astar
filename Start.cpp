@@ -11,7 +11,7 @@
 #pragma warning(disable:4996)
 using namespace std;
 
-// beanch
+// beanch123
 // 用来测试git 嘻嘻
 void MultihierarchyVsOrdinary() {
     // 0-15对应着H3的0-15层索引；16为以自定义层次为基准的多层次格网地图索引
@@ -146,8 +146,10 @@ void MultiObjectVsSingleObject() {
     // 多粒度模型
     /*H3Index h3_start = 0x8a400889c157fff;
     H3Index h3_end = 0x8a400881b487fff;*/
-    H3Index h3_start = 0x8a4008b98a6ffff;
-    H3Index h3_end = 0x8a4008b9dd17fff;
+    //H3Index h3_start = 0x8a4008b98a6ffff;
+    H3Index h3_start = 0x8a4008b9d06ffff;
+    //H3Index h3_end = 0x8a4008b9dd17fff;
+    H3Index h3_end = 0x8a4008b9eadffff;
 
     //H3Index h3_start = 0x8a400885b047fff;
     //H3Index h3_end = 0x8a400885914ffff;
@@ -256,8 +258,35 @@ void MultiObjectVsSingleObject() {
 //    system(showInKepler.c_str());
 }
 
+void Voronoi()
+{
+    // 1. 构建distance obst
+    // 2. 找GVD边
+
+    // 对应类的near_distance
+    // 对应 is_edge
+    // 对应is_site
+    H3_D Distance;
+    H3_B Edge;
+    H3_B site;
+    vector<H3Index> data;
+    H3_D cellList;
+
+    string filepath1 = "D:/桌面/H3index_site.csv";
+    Util::loading_site_data(filepath1, cellList);
+    cout << cellList.size() << endl;// 966条数据
+
+    // 1.给站点编号
+    // 2.计算网格到各个站点的距离 按照距离从小到大排序 得到distance 和 obst 矩阵
+    
+
+
+
+
+}
 int main()
 {
+    Voronoi();
     //MultihierarchyVsOrdinary();
     MultiObjectVsSingleObject();
     // by xgg

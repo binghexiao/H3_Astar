@@ -147,6 +147,7 @@
     <ClCompile Include="Start.cpp" />
     <ClCompile Include="Multi_Astar.cpp" />
     <ClCompile Include="Util.cpp" />
+    <ClCompile Include="Vinoroi.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Astar.h" />
@@ -188,6 +189,7 @@
     <ClInclude Include="threadPool.h" />
     <ClInclude Include="type_def.h" />
     <ClInclude Include="Util.h" />
+    <ClInclude Include="Vinoroi.h" />
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="NatvisFile.natvis" />

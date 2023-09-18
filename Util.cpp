@@ -740,3 +740,56 @@ double Util::angleOflocation(GeoPoint l1, GeoPoint l2, GeoPoint l3) {
     return (acos(P / (_P1P2 * _P2P3)) / PI) * 180;
 }
 
+void Util::loading_site_data(string filepath, H3_D &cellList)
+{
+    // 1. 参数1： 文件路径
+    // 2. 参数2： data 存放所有站点的H3index
+    // 3. 参数3： cellList 存放所有站点的键值对
+    // 把站点的那个文件读到 site中去
+    ifstream fp(filepath);
+    string line;
+    getline(fp, line); //跳过列名，第一行不做处理
+    while (getline(fp, line)) { //循环读取每行数据
+        string data;
+        istringstream readstr(line); //string数据流化
+        getline(readstr, data, ',');
+        getline(readstr, data, ',');
+        H3Index index = stringToH3(data.c_str());
+        getline(readstr, data, ',');
+        double is_site = atof(data.c_str());
+        cellList.emplace(index, is_site);
+        ////将一行数据按'，'分割
+        //getline(readstr, data, ','); //读取数据
+        //H3Index index = stringToH3(data.c_str());
+        //getline(readstr, data, ','); //读取数据
+        //double water = atof(data.c_str());
+        //getline(readstr, data, ','); //读取数据
+        //double building = atof(data.c_str());
+        //getline(readstr, data, ','); //读取数据
+        //double brush = atof(data.c_str());
+        //getline(readstr, data, ','); //读取数据
+        //double forest = atof(data.c_str());
+        //getline(readstr, data, ','); //读取数据
+        //double grass = atof(data.c_str());
+        //getline(readstr, data, ','); //读取数据
+        //double soft = atof(data.c_str());
+        //getline(readstr, data, ','); //读取数据
+        //double dem = atof(data.c_str());
+        //getline(readstr, data, ','); //读取数据
+        //double comprehensive = atof(data.c_str());
+        //getline(readstr, data, ','); //读取数据
+        //double hard = atof(data.c_str());
+        /*m_PointMap.emplace(index, Point(index));
+        m_DEM.emplace(index, dem);
+        m_Comprehensive.emplace(index, comprehensive);
+        m_Factor.emplace(index, vector<double>{grass, water, forest, building, soft, hard, brush});*/
+    }
+}
+
+void Util::SetNumber(H3_D& siteList)
+{
+    // 1. sitelist的形式 h3_D 是一个unordered_map
+    // h3index -- 1 或者 0
+
+
+}
