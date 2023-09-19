@@ -588,6 +588,8 @@ vector<pair<vector<H3Index>, point_type>> Util::MultiObjectMultiHierarchySearch(
     Multi_Astar alg(PointMap[targetLevel], direction_comparison, DEM[targetLevel], Comprehensive[targetLevel], level);
     clock_t st, fin;
     st = clock();
+    // maxsize Max_of_the_Number_of_Open_Grid open队列的最大深度
+    // size Traverses_the_Number_of_Grid 遍历的格网数
     auto result = alg.search(start, end, maxSize, Size);
     fin = clock();
     time = (double)(fin - st) / CLOCKS_PER_SEC;
@@ -791,5 +793,10 @@ void Util::SetNumber(H3_D& siteList)
     // 1. sitelist的形式 h3_D 是一个unordered_map
     // h3index -- 1 或者 0
 
+
+}
+
+void Util::callPython(vector<double> parList)
+{
 
 }

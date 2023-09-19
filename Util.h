@@ -11,6 +11,7 @@
 #include "Node.h"
 #include "type_def.h"
 #include <iomanip>
+#include "C:/Python311/include/Python.h"
 
 // 测试 嘻嘻
 class Util {
@@ -86,4 +87,70 @@ public:
     static void loading_site_data(string filePath, H3_D& cellList);
 
     static void SetNumber(H3_D &sitelist);
+    static void callPython(vector<double> parList);
+    
+    template<class T>
+    // T* arr的问题：
+    // 1. T* 代表是一个指针 arr代表首地址
+    //  (1) 传递普通数组 数组名就是首地址 没有问题
+    //  (2) 传递vector的时候 写成 &a[0] 
+    static string arr_to_string_list(T* arr, int N) {
+        string s = "[";
+        for (int i = 0; i < N; ++i) {
+            s += to_string(arr[i]);
+            if (i != N - 1) s += ",";
+        }
+        s += "]";
+        return s;
+    }
+
+    template<class T, class V = int>
+    static void plot(T* x, int N1, V* y = NULL, bool equal = false) {
+        PyRun_SimpleString("import matplotlib.pyplot as plt");
+        if (equal) {
+            PyRun_SimpleString("plt.axis(\"equal\")");
+        }
+
+        string cmd = "plt.plot(";
+        string s1 = arr_to_string_list(x, N1);
+        if (y != NULL) {
+            string s2 = arr_to_string_list(y, N1);
+            cmd += (s1 + "," + s2 + ")");
+            PyRun_SimpleString(cmd.c_str());
+        }
+        else {
+            cmd += (s1 + ")");
+            PyRun_SimpleString(cmd.c_str());
+        }
+        PyRun_SimpleString("plt.show()");
+    }
+
+    template<class T, class V>
+    static void scatter(T* x, int N1, V* y = NULL, bool equal = false)
+    {
+        PyRun_SimpleString("import matplotlib.pyplot as plt");
+        if (equal) {
+            PyRun_SimpleString("plt.axis(\"equal\")");
+        }
+
+        string cmd = "plt.scatter(";
+        string s1 = arr_to_string_list(x, N1);
+        if (y != NULL) {
+            string s2 = arr_to_string_list(y, N1);
+            cmd += (s1 + "," + s2 + ")");
+            PyRun_SimpleString(cmd.c_str());
+        }
+        PyRun_SimpleString("plt.show()");
+    }
+
+
+
+    static void pythonInitial() {
+        Py_Initialize(); /*初始化python解释器,告诉编译器要用的python编译器*/
+        string path = ".";
+        string chdir_cmd = string("sys.path.append(\"") + path + "\")";
+        const char* cstr_cmd = chdir_cmd.c_str();
+        PyRun_SimpleString("import sys");
+        PyRun_SimpleString(cstr_cmd);
+    }
 };

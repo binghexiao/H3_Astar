@@ -8,6 +8,8 @@
 #include <fstream>
 #include "h3api.h"
 #include "Util.h"
+#include "include/pareto/spatial_map.h"
+#include "Multi_Astar.h"
 #pragma warning(disable:4996)
 using namespace std;
 
@@ -253,6 +255,10 @@ void MultiObjectVsSingleObject() {
     outfile1 << Util::getGeoJson(result, "普通");
     outfile1.close();
     log.close();
+    //log_size.close();
+
+    
+    
 //    string showInKepler = "python D:/工作空间/pyworkspace/Test/newAlgorithm/start.py -n 多粒度 -m 普通";
 //    //string showInKepler = "python D:\\PythonProject\\Test\\newAlgorithm\\start.py -n 多粒度 -m 普通";
 //    system(showInKepler.c_str());
@@ -284,11 +290,78 @@ void Voronoi()
 
 
 }
+
+void test() {
+
+    ofstream log_test;
+    pareto::spatial_map<double, 2, string> m;
+    m(1, 5) = "A";
+    m(4, 1) = "B";
+    m(4, 2) = "C";
+    m(5, 2) = "D";
+    m(4.5, 1.5) = "E";
+    //cout << m(1, 5) << endl;\
+    
+    // 关于spatial_map几个函数的用法
+    // 1. find_insersection(给定左下右上边界) 返回范围里的点  包括矩形边
+    // 2. find_within同上 区别在于  不包括矩形边上的点
+    // 3. find_disjoint 返回不在矩形中的点
+    // 4. find_nearst 返回最近的k个点 包括自身
+
+    /*for (auto it = m.find_intersection({4, 1}, {5, 2}); it != m.end(); ++it) {
+        cout << "find_intersection" << endl;
+        std::cout << it->first << " -> " << it->second << std::endl;
+    }
+    for (auto it = m.find_within({4, 1}, {5, 2}); it != m.end(); ++it) {
+        cout << "find_within" << endl;
+        std::cout << it->first << " -> " << it->second << std::endl;
+    }
+    for (auto it = m.find_disjoint({4, 1}, { 5, 2}); it != m.end(); ++it) {
+        cout << "find_disjoint" << endl;
+
+        std::cout << it->first << " -> " << it->second << std::endl;
+    }*/
+    for (auto iter = m.begin(); iter != m.end(); iter++)
+    {
+        double cd = 0;
+        double x_iter = *(iter->first.begin());
+        auto temp = iter->first.end() - 1;
+        double y_iter = *temp;
+
+        for (auto it = m.find_nearest({x_iter, y_iter}, 3); it != m.end(); ++it) {
+            /*cout << "find_nearest" << endl;
+            std::cout << it->first << " -> " << it->second << std::endl;*/
+            double x_it = *(it->first.begin());
+            auto temp2 = it->first.end() - 1;
+            double y_it = *temp2;
+            cd = cd + fabs(x_it - x_iter) + fabs(y_it - y_iter);
+        }
+        cout << cd << endl;
+    }
+    
+    //auto it = m.find_nearest({4, 1});
+    //std::cout << it->first << " -> " << it->second << std::endl;
+}
+
+void draw()
+{
+    /*double a[] = { 1.2, 2.0, 3, 4, 5, 6, 3, 2, 3, 2, 31, 2, 1, 4 };
+    double b[] = { 2, 7, 8, 9, 5, 3, 2, 7, 3, 7, 1, 2, 5, 4 };*/
+    vector<double> a = { 1,2,3,4,5 };
+    vector<double> b = { 2,4,6,2,1 };
+    Util::pythonInitial();
+    //plot(a, 14); // 14是数组长度
+    Util::scatter(&a[0], 5, &b[0]);
+    Py_Finalize(); /*结束python解释器，释放资源*/
+    system("pause");
+}
 int main()
 {
-    Voronoi();
+    //test();
+    //Voronoi();
     //MultihierarchyVsOrdinary();
-    MultiObjectVsSingleObject();
+    draw();
+    //MultiObjectVsSingleObject();
     // by xgg
     //array_type g_m({ 1, 2 });
     ////cout << g_m[0] << endl;

@@ -13,6 +13,7 @@
 #include "type_def.h"
 using namespace std;
 static std::initializer_list<bool> direction_comparison;
+//extern ofstream log_size;
 
 
 class Multi_Astar {
@@ -37,6 +38,7 @@ private:
 
 
 	Point& OpenPop(array_type&, Parameter& parameter);
+	Point& SelectCrowdDisOPEN(array_type&, Parameter& parameter);
 	void NextStep(Point& current, array_type current_g, H3Index goal, int& Size, Parameter& parameter);
 	array_type calG(array_type& parent_g, H3Index parent, H3Index current, bool& flag, Parameter& parameter);
 	array_type calH(H3Index goal, H3Index current, H3Index parent);

@@ -1,6 +1,7 @@
 #include "Multi_Astar.h"
 #include "Util.h"
 
+
 Multi_Astar::Multi_Astar(H3_P& m, std::initializer_list<bool> list, H3_D& dem, H3_D& comprehensive, int level) :NodeMap(m), DEM(dem), Comprehensive(comprehensive) {
     direction_comparison = list;
     baseLevel = level;
@@ -12,6 +13,19 @@ Multi_Astar::~Multi_Astar()
 
 }
 
+bool compareUseCD(const pair<array_type, pair<pair<array_type, Parameter>, double>>& a,
+    pair<array_type, pair<pair<array_type, Parameter>, double>>& b) {
+    //comp(a,b)函数的返回值是一个bool值，当返回值为true时不改变元素顺序，反之则需要调换元素。
+    //可以把其中的a看作序列中前一个位置的元素，b看作后一个位置的元素:
+    //如果a < b的时候comp(a, b) = true，那么a就会被放在b前面，排序呈升序。
+
+    double dou_a = a.second.second;
+    double dou_b = b.second.second;
+
+    return dou_a < dou_b;
+
+
+}
 bool CompWithoutDirectionComparison(const pair<array_type, pair<array_type, Parameter>>& a,
     const pair<array_type, pair<array_type, Parameter>>& b) {
     // 这里设置优先级 F_m
@@ -37,8 +51,17 @@ bool CompWithoutDirectionComparison(const pair<array_type, pair<array_type, Para
         return arr_a[0] < arr_b[0];*/
 }
 
+
 front_type Multi_Astar::search(H3Index startPos, H3Index endPos, int& maxSize, int& Size)
 {
+    // maxsize Max_of_the_Number_of_Open_Grid open队列的最大深度
+    // size Traverses_the_Number_of_Grid 遍历的格网数
+    
+
+    // 1. 迭代开始之前初始化startpos，将其加入到open列表中
+    // 2. 开始执行迭代，每次从open中弹出来一个三元组：
+    //      2.1 如果这个点是终点，把这条路的成本加入到COSTS中，并在OPEN中删除被这个成本支配的三元组
+    //      2.2 如果这个点不是终点 执行nextstep
     list<H3Index> path;
     front_type pathlist;
     // 判断起始点和终止点是否存在
@@ -55,6 +78,7 @@ front_type Multi_Astar::search(H3Index startPos, H3Index endPos, int& maxSize, i
         F[i] = g[i] + h[i];
     // G,F,Parameter
     OPEN.insert(make_pair(g, make_pair(F, Parameter{ startPos, Comprehensive[startPos]})));
+
     while (!OPEN.empty())
     {
         // 获得点和它的G_M
@@ -66,16 +90,29 @@ front_type Multi_Astar::search(H3Index startPos, H3Index endPos, int& maxSize, i
         int grid_num = 0;
         // 弹出最佳F和其参数
         Parameter para;
-        Point& current = OpenPop(g_m, para);
+        //Point& current = OpenPop(g_m, para);
+        Point& current = SelectCrowdDisOPEN(g_m, para);
         //cout << "current Point " << current.getIndex() << "(" << g_m[0] << "," << g_m[1] << ") ;;;;;;;;;;;PriorityQueueSize:" << OPEN.size() << ";;;;;;;;result : " << COSTS.size() << endl;
         //cout << "; PriorityQueueSize:" << OPEN.size() << ";;;;;;;; result: " << COSTS.size() << endl;
+
+        // 如果弹出的格网是终点
         if (current.getIndex() == endPos)
         {
+            // 这个文件用来统计遍历的格网数
+            ofstream log_size;
             // 因为终点的H为0，所以终点的F_m就等于G_m
             point_type point_g_m(g_m.begin(), g_m.end());
             // 记录路径
             // 
             COSTS.insert(make_pair(point_g_m, para));
+            if (COSTS.size() == 1) {
+                log_size.open("D:/桌面/size_and_maxSize.txt");
+                cout << "找到第一条路径之前遍历的格网数" << Size << endl;
+                log_size << "找到第一条路径之前遍历的格网数" << Size << endl;
+                cout << "找到第一条路径之前OPEN队列深度" << maxSize << endl;;
+                log_size << "找到第一条路径之前OPEN队列深度" << maxSize << endl;
+                log_size.close();
+            }
             cout << "路径数：" << COSTS.size() << endl;
             // 清除在OPEN中被支配的数据
             decltype(OPEN) temp;
@@ -88,6 +125,11 @@ front_type Multi_Astar::search(H3Index startPos, H3Index endPos, int& maxSize, i
             OPEN = move(temp);
         }
         else
+            // 参数说明：
+            // 1. current 当前弹出的格网
+            // 2. 当前的g
+            // 3. endpos终点
+            // 4. para 弹出格网的para
             NextStep(current, g_m, endPos, Size, para);
         //cout << "current Point " << current.getIndex() << "(" << g_m[0] << "," << g_m[1] << ");;;;;;;;;;;PriorityQueueSize:" << OPEN.size() << ";;;;;;;;result : " << COSTS.size() << endl;
     }
@@ -95,6 +137,80 @@ front_type Multi_Astar::search(H3Index startPos, H3Index endPos, int& maxSize, i
     return COSTS;
 }
 
+Point& Multi_Astar::SelectCrowdDisOPEN(array_type& g_m, Parameter& parameter) {
+    
+    // 1. 将multimap转为spatialmap
+    // OPEN  <g, <F, P>>
+    // OPEN_SP  <F, <g, P>>
+    // Front_with_CD <F, < <g, P>, CD > >
+    pareto::spatial_map<double, VectorDimension, pair<array_type, Parameter> > OPEN_SP;
+    pareto::front<double, VectorDimension, pair<pair<array_type, Parameter>, double>> Front_with_CD;
+
+    for (auto it = OPEN.begin(); it != OPEN.end(); it++)
+    {
+        OPEN_SP.insert(make_pair(point_type(it->second.first.begin(), it->second.first.end()),
+            make_pair(it->first, it->second.second)));
+    }
+    // 2. 计算距离  放到front<F, < <g, P>, cd >>
+    for (auto it = OPEN_SP.begin(); it != OPEN_SP.end(); it++) {
+        
+        // 1. 使用 * 解引用，才能获取到it指向的元素
+        // 2. it->first.end()指向的不是最后一个元素 
+        //  2.1 iter = it->first.end() - 1
+        //  2.2 *iter
+        double cd = 0;
+        double x_it = *(it->first.begin());
+        auto temp = it->first.end() - 1;
+        double y_it = *temp;
+
+        for (auto iter = OPEN_SP.find_nearest({x_it, y_it}, 3); iter != OPEN_SP.end(); ++iter) {
+            //std::cout << iter->first << " -> " << iter->second << std::endl;
+            // it-> first 是 begin是x end是y
+            double x_iter = *(iter->first.begin());
+            auto temp2 = iter->first.end() - 1;
+            double y_iter = *temp2;
+
+            cd = cd + fabs(x_it - x_iter) + fabs(y_it - y_iter);
+        }
+        Front_with_CD.insert(make_pair(point_type(it->first.begin(), it->first.end()), make_pair(make_pair(it->second.first, it->second.second), cd)));
+    }
+    // 3. 把front中的三元组放到vector中，并进行排序
+    // pair<array_type, pair<pair<array_type, Parameter>>>
+    vector<pair<array_type, pair<pair<array_type, Parameter>, double>>> nondominantVector;
+
+    for (auto& [key, value] : Front_with_CD) {
+        nondominantVector.push_back(make_pair(key.values(), value));
+    }
+    sort(nondominantVector.begin(), nondominantVector.end(), compareUseCD);
+    auto target = make_pair(nondominantVector[0].first, nondominantVector[0].second.first);
+
+    auto end = OPEN.upper_bound(target.second.first);
+    auto it = OPEN.find(target.second.first);
+    // g,F,Parameter
+    while (it != end) {
+        if (it->first == target.second.first && it->second.first == target.first && it->second.second == target.second.second)
+            break;
+        it++;
+    }
+    // 依据H3index 找到那个点
+    assert(it != end);
+    // 输出 index F[0] F[1]
+    //cout << "0x" << std::hex << it->second.second << std::dec << "(" << (it->second.first)[0] << "," << (it->second.first)[1] << ")";
+    // 找到这个格网
+    Point& p = NodeMap[it->second.second.getIndex()];
+    //将这个点的g_m从Gop移动到Gcl
+    point_type point_g_m(it->first.begin(), it->first.end());
+    // g_m, 父节点;
+    assert(p.op.count(point_g_m) != 0);
+    p.cl.insert(make_pair(point_g_m, p.op[point_g_m]));
+    p.op.erase(point_g_m);
+    g_m = it->first;
+    parameter = it->second.second;
+    //在Open列表中删除被取的三元组
+    OPEN.erase(it);
+    return p;
+
+}
 // 弹出在非支配向量里面最优的一个
 // 先将Open里的三元组全部放入非支配集合
 // 再对非支配集合进行排序
