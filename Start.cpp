@@ -16,19 +16,21 @@ using namespace std;
 // beanch123
 // 用来测试git 嘻嘻
 void MultihierarchyVsOrdinary() {
+    //Util::cnt = 0;
     // 0-15对应着H3的0-15层索引；16为以自定义层次为基准的多层次格网地图索引
+    
     vector<H3_V> Factor(17, H3_V());
     vector<H3_D> DEM(17, H3_D());
     vector<H3_D> Comprehensive(17, H3_D());
     vector<H3_N> PointMap(17, H3_N());
     //用于统计参数数据
-    ofstream log("log.txt");
+    ofstream log("D:/桌面/log.txt");
     //基准格网层级
     int level = 10;
     //多层次格网层级
     int target_level = 16;
     //基准格网数据路径
-    string filepath = "D:/桌面/部分实验数据_10.csv";
+    string filepath = "D:/桌面/路径规划/已有资料/改进算法后实验结果/实验数据_10.csv";
     string m_filepath = "D:/桌面/路径规划/已有资料/改进算法后实验结果/other_compact_h3_res=10_算法用.csv";
 
     cout << "加载数据..." << endl;
@@ -117,6 +119,7 @@ void MultihierarchyVsOrdinary() {
     string showInKepler = "python D:\\PythonProject\\Test\\new\\start.py -n 多粒度 -m 普通";
     system(showInKepler.c_str());
     log.close();
+    Py_Finalize();
 }
 
 // 多目标
@@ -128,14 +131,14 @@ void MultiObjectVsSingleObject() {
     vector<H3_D> Comprehensive(17, H3_D());
     vector<H3_P> PointMap(17, H3_P());
     //用于统计参数数据
-    ofstream log("log.txt");
+    ofstream log("D:/桌面/log0927.txt",ios::app);
     //基准格网层级
     int level = 10;
     //多层次格网层级
     int target_level = 16;
     //基准格网数据路径
     // string filepath = "C:\\Users\\69025\\Desktop\\路径规划\\论文实验\\英文论文实验\\改进算法后实验结果\\实验数据_10.csv";
-    //string filepath = "D:\\桌面\\改进算法后实验结果\\实验数据_10.csv";
+    //string filepath = "D:/桌面/路径规划/已有资料/改进算法后实验结果/实验数据_10.csv";
     string filepath = "D:/桌面/966数据_10.csv";
     // string m_filepath = "C:\\Users\\69025\\Desktop\\路径规划\\论文实验\\英文论文实验\\改进算法后实验结果\\other_compact_h3_res=10_算法用.csv";
     //string m_filepath = "D:\\桌面\\改进算法后实验结果\\other_compact_h3_res=10_算法用.csv";
@@ -146,19 +149,22 @@ void MultiObjectVsSingleObject() {
     // 读取多层次格网数据，并生成多层次格网地图
     //Util::MultiObjectMultiHierarchy(PointMap, DEM, Comprehensive, Factor, level, m_filepath);
     // 多粒度模型
-    /*H3Index h3_start = 0x8a400889c157fff;
-    H3Index h3_end = 0x8a400881b487fff;*/
-    //H3Index h3_start = 0x8a4008b98a6ffff;
+    // 
+    // 部分数据的开始点和结束点
     H3Index h3_start = 0x8a4008b9d06ffff;
-    //H3Index h3_end = 0x8a4008b9dd17fff;
     H3Index h3_end = 0x8a4008b9eadffff;
 
-    //H3Index h3_start = 0x8a400885b047fff;
-    //H3Index h3_end = 0x8a400885914ffff;
+    // 完整数据的起点和终点
+   /* H3Index h3_start = 0x8a400889c157fff;
+    H3Index h3_end = 0x8a400881b487fff;*/
+    
     vector<pair<vector<H3Index>, point_type>> result;
     cout << "寻路启动..." << endl;
-    /*cout << "多粒度：" << endl;
-    log << "多粒度：" << endl;*/
+    //cout << "多粒度：" << endl;
+    //auto time = Util::PrintCurrentTime();
+    //log << "多粒度：" << endl;
+    //log << time << endl;
+    //
     // 实验次数
     int Turn = 1;
     //用于统计时间数据
@@ -206,6 +212,8 @@ void MultiObjectVsSingleObject() {
     //outfile << Util::getGeoJson(result, "多粒度");
     //outfile.close();
     cout << "普通：" << endl;
+    auto time = Util::PrintCurrentTime();
+    log << time << endl;
     log << "普通：" << endl;
     //totaltime = 0;
   /*  Max_of_the_Number_of_Open_Grid = 0;
@@ -249,6 +257,7 @@ void MultiObjectVsSingleObject() {
         // 坡度均值与标准差
         log << "; 均值：" << mean[i] << "; 标准差：" << dev[i] << endl;
         cout << "; 均值：" << mean[i] << "; 标准差：" << dev[i] << endl;
+        
     }
     ofstream outfile1("D:/桌面/普通.geojson");
     //ofstream outfile1("D:\\桌面\\改进算法后实验结果\\普通.geojson");
@@ -290,54 +299,68 @@ void Voronoi()
 
 
 }
-
+bool com(const double& a, const double& b)
+{
+    return a < b;
+}
 void test() {
 
     ofstream log_test;
-    pareto::spatial_map<double, 2, string> m;
+    pareto::front<double, 2, string> m;
+    pareto::spatial_map<double, 2, string> open;
+    vector<double> x;
     m(1, 5) = "A";
     m(4, 1) = "B";
     m(4, 2) = "C";
     m(5, 2) = "D";
     m(4.5, 1.5) = "E";
-    //cout << m(1, 5) << endl;\
-    
-    // 关于spatial_map几个函数的用法
-    // 1. find_insersection(给定左下右上边界) 返回范围里的点  包括矩形边
-    // 2. find_within同上 区别在于  不包括矩形边上的点
-    // 3. find_disjoint 返回不在矩形中的点
-    // 4. find_nearst 返回最近的k个点 包括自身
-
-    /*for (auto it = m.find_intersection({4, 1}, {5, 2}); it != m.end(); ++it) {
-        cout << "find_intersection" << endl;
-        std::cout << it->first << " -> " << it->second << std::endl;
-    }
-    for (auto it = m.find_within({4, 1}, {5, 2}); it != m.end(); ++it) {
-        cout << "find_within" << endl;
-        std::cout << it->first << " -> " << it->second << std::endl;
-    }
-    for (auto it = m.find_disjoint({4, 1}, { 5, 2}); it != m.end(); ++it) {
-        cout << "find_disjoint" << endl;
-
-        std::cout << it->first << " -> " << it->second << std::endl;
-    }*/
-    for (auto iter = m.begin(); iter != m.end(); iter++)
+    m(2, 3) = "F";
+    open(1, 5) = "A";
+    open(4, 1) = "B";
+    open(4, 2) = "C";
+    open(5, 2) = "D";
+    open(4.5, 1.5) = "E";
+    open(2, 3) = "F";
+    /*for (auto it = m.begin(); it != m.end(); it++)
     {
-        double cd = 0;
-        double x_iter = *(iter->first.begin());
-        auto temp = iter->first.end() - 1;
-        double y_iter = *temp;
+        cout << m.crowding_distance(it) << endl;
+    }*/
+    //for (auto& [key, value] : m)
+    //{
+    //    //cout << m.crowding_distance(key) << endl;
+    //    double cd = m.crowding_distance(key);
+    //    x.push_back(cd);
+    //}
+    //sort(x.begin(), x.end(), com);
 
-        for (auto it = m.find_nearest({x_iter, y_iter}, 3); it != m.end(); ++it) {
-            /*cout << "find_nearest" << endl;
-            std::cout << it->first << " -> " << it->second << std::endl;*/
-            double x_it = *(it->first.begin());
-            auto temp2 = it->first.end() - 1;
-            double y_it = *temp2;
-            cd = cd + fabs(x_it - x_iter) + fabs(y_it - y_iter);
+    //for (auto it = x.begin(); it != x.end(); it++)
+    //{
+    //    cout << *it << endl;
+    //}
+    std::vector<bool> is_minimization = { true, true };
+    for (auto& [key, value] : m)
+    {
+        double cnt = 0;
+        cout << value << "支配几个" << endl;
+        for (auto& [key1, value1] : open)
+        {
+            if (key.dominates(key1, is_minimization))
+            {
+                cnt++;
+            }
         }
-        cout << cd << endl;
+        cout << cnt << endl;
     }
+
+    /*cout << "Uniformity: " << m.uniformity() << std::endl;
+    std::cout << "ACrowding distance: " << m.crowding_distance(m.begin()->first)<< std::endl;
+    std::cout << "ACrowding distance: " << m.crowding_distance({1,5}) << std::endl;
+    std::cout << "BCrowding distance: " << m.crowding_distance({4,1}) << std::endl;
+    std::cout << "CCrowding distance: " << m.crowding_distance({4,2}) << std::endl;
+    std::cout << "DCrowding distance: " << m.crowding_distance({5,2}) << std::endl;
+    std::cout << "ECrowding distance: " << m.crowding_distance({4.5,1.5}) << std::endl;
+    std::cout << "FCrowding distance: " << m.crowding_distance({2,3}) << std::endl;
+    std::cout << "avg: " << m.average_crowding_distance() << std::endl;*/
     
     //auto it = m.find_nearest({4, 1});
     //std::cout << it->first << " -> " << it->second << std::endl;
@@ -345,13 +368,14 @@ void test() {
 
 void draw()
 {
-    /*double a[] = { 1.2, 2.0, 3, 4, 5, 6, 3, 2, 3, 2, 31, 2, 1, 4 };
-    double b[] = { 2, 7, 8, 9, 5, 3, 2, 7, 3, 7, 1, 2, 5, 4 };*/
-    vector<double> a = { 1,2,3,4,5 };
-    vector<double> b = { 2,4,6,2,1 };
+    double a[] = { 1.2, 2.0, 3, 4, 5, 6, 3, 2, 3, 2, 31, 2, 1, 4 };
+    double b[] = { 2, 7, 8, 9, 5, 3, 2, 7, 3, 7, 1, 2, 5, 4 };
+    /*vector<double> a = { 1,2,3,4,5 };
+    vector<double> b = { 2,4,6,2,1 };*/
     Util::pythonInitial();
     //plot(a, 14); // 14是数组长度
-    Util::scatter(&a[0], 5, &b[0]);
+    //Util::scatter(&a[0], 5, &b[0]);
+    Util::plot(a,14, b);
     Py_Finalize(); /*结束python解释器，释放资源*/
     system("pause");
 }
@@ -360,8 +384,17 @@ int main()
     //test();
     //Voronoi();
     //MultihierarchyVsOrdinary();
-    draw();
-    //MultiObjectVsSingleObject();
+    //draw();
+    Py_Initialize();
+    string chdir_cmd = string("sys.path.append(\"") + "." + "\")";
+
+    const char* cstr_cmd = chdir_cmd.c_str();
+    PyRun_SimpleString("import sys");
+    PyRun_SimpleString(cstr_cmd);
+    // 语句1 
+    PyRun_SimpleString("import matplotlib.pyplot as plt");
+
+    MultiObjectVsSingleObject();
     // by xgg
     //array_type g_m({ 1, 2 });
     ////cout << g_m[0] << endl;

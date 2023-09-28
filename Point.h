@@ -18,6 +18,8 @@ public:
 	front_type op;
 	// g_m, 含父节点的Parameter
 	front_type cl;
+	// 到这个点的非支配向量的第二个分量的最小值
+	double g_2_min = DBL_MAX;
 	// 邻接节点                                                                        
 	// index,cost
 	std::set<H3Index> neighbours;

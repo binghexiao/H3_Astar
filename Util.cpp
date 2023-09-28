@@ -582,6 +582,7 @@ vector<H3Index> Util::OrdinarySearch(H3_N& PointMap, H3_D& DEM, H3_D& Comprehens
 // 多目标路径规划
 vector<pair<vector<H3Index>, point_type>> Util::MultiObjectMultiHierarchySearch(vector<H3_P>& PointMap, vector<H3_D>& DEM, vector<H3_D>& Comprehensive, int targetLevel, int level, H3Index start, H3Index end,
     ofstream& log, int& maxSize, int& Size, double& time) {
+    ofstream log_cost;
 
     cout << "正在运行MultiObjectMultiHierarchySearch" << endl;
     initializer_list<bool> direction_comparison = { true, true};
@@ -593,6 +594,13 @@ vector<pair<vector<H3Index>, point_type>> Util::MultiObjectMultiHierarchySearch(
     auto result = alg.search(start, end, maxSize, Size);
     fin = clock();
     time = (double)(fin - st) / CLOCKS_PER_SEC;
+    cout << "大小" << result.size() << endl;
+    for (auto it = result.begin(); it != result.end(); it++)
+    {
+        log_cost.open("D:/桌面/costs.txt", ios::app);
+        log_cost << "路径 目标1:" << *it->first.begin() << endl;
+        log_cost << "路径 目标2:" << *(it->first.end() -1) << endl;
+    }
     // 注意起点和终点颠倒，因为需要倒序得到路径
     auto rnt = getPathList(PointMap[targetLevel], DEM[targetLevel], Comprehensive[targetLevel], end, start);
     return rnt;
@@ -800,3 +808,14 @@ void Util::callPython(vector<double> parList)
 {
 
 }
+
+string Util::PrintCurrentTime()
+{
+    auto now = chrono::system_clock::now();
+    // 转换为 std::time_t 类型
+    auto time = chrono::system_clock::to_time_t(now);
+    // 打印时间
+    return ctime(&time);
+}
+
+int Util::cnt = 0;

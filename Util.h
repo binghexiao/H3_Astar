@@ -12,6 +12,7 @@
 #include "type_def.h"
 #include <iomanip>
 #include "C:/Python311/include/Python.h"
+#include <chrono>
 
 // 测试 嘻嘻
 class Util {
@@ -105,17 +106,17 @@ public:
     }
 
     template<class T, class V = int>
-    static void plot(T* x, int N1, V* y = NULL, bool equal = false) {
+    static void plot(T* x, int N1, V* y = NULL, bool equal = false, string marker = "^") {
         PyRun_SimpleString("import matplotlib.pyplot as plt");
-        if (equal) {
+        /*if (equal) {
             PyRun_SimpleString("plt.axis(\"equal\")");
-        }
+        }*/
 
         string cmd = "plt.plot(";
         string s1 = arr_to_string_list(x, N1);
         if (y != NULL) {
             string s2 = arr_to_string_list(y, N1);
-            cmd += (s1 + "," + s2 + ")");
+            cmd += (s1 + "," + s2 + "," + "marker = \"^\"" + ")");
             PyRun_SimpleString(cmd.c_str());
         }
         else {
@@ -143,14 +144,38 @@ public:
         PyRun_SimpleString("plt.show()");
     }
 
+    template<class T, class V>
+    static void scatter_marker(T* x, int N1, V* y = NULL, bool equal = false)
+    {
+        PyRun_SimpleString("import matplotlib.pyplot as plt");
+        if (equal) {
+            PyRun_SimpleString("plt.axis(\"equal\")");
+        }
 
+        string cmd = "plt.scatter(";
+        string s1 = arr_to_string_list(x, N1);
+        if (y != NULL) {
+            string s2 = arr_to_string_list(y, N1);
+            cmd += (s1 + "," + s2 + "marker = \"^\"" + ")");
+            PyRun_SimpleString(cmd.c_str());
+        }
+        PyRun_SimpleString("plt.show()");
+    }
 
     static void pythonInitial() {
         Py_Initialize(); /*初始化python解释器,告诉编译器要用的python编译器*/
         string path = ".";
+        // 要的结果是sys.path.append(".")
+        // .前后的"需要加转义字符\
+
         string chdir_cmd = string("sys.path.append(\"") + path + "\")";
+
         const char* cstr_cmd = chdir_cmd.c_str();
         PyRun_SimpleString("import sys");
         PyRun_SimpleString(cstr_cmd);
     }
+    static int cnt;
+
+    static string PrintCurrentTime();
 };
+
