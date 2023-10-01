@@ -35,30 +35,9 @@ bool compareUseCD2(const pair<double, pair<array_type,pair<array_type, Parameter
 
     return dou_a > dou_b;
 }
-//struct Cmp1
-//{
-//    bool operator () (pair<pair<array_type, pair<array_type, Parameter>>, double> const& a,
-//        pair<pair<array_type, pair<array_type, Parameter>>, double> const& b)const
-//    {
-//        double x = *a.first.first.begin();
-//        double y = *b.first.first.begin();
-//        return x < y;
-//    }
-//};
-//
-//struct Cmp2
-//{
-//    bool operator () (pair<pair<array_type, pair<array_type, Parameter>>, double> const& a,
-//        pair<pair<array_type, pair<array_type, Parameter>>, double> const& b)const
-//    {
-//        auto t1 = a.first.first.end() - 1;
-//        auto t2 = a.first.first.end() - 1;
-//        double x = *t1;
-//        double y = *t2;
-//
-//        return x < y;
-//    }
-//};
+
+
+
 bool CompareUseDr(const pair<array_type, pair<array_type, Parameter>>& a,
     const pair<array_type, pair<array_type, Parameter>>& b) {
     // 这里设置优先级 F_m
@@ -144,17 +123,16 @@ front_type Multi_Astar::search2(H3Index startPos, H3Index endPos, int& maxSize, 
         //Point& current = SelectSingleSort(g_m, para);
         //cout << "current Point " << current.getIndex() << "(" << g_m[0] << "," << g_m[1] << ") ;;;;;;;;;;;PriorityQueueSize:" << OPEN.size() << ";;;;;;;;result : " << COSTS.size() << endl;
         //cout << "; PriorityQueueSize:" << OPEN.size() << ";;;;;;;; result: " << COSTS.size() << endl;
-#pragma region g_2_min(Sgoal) <= g_current_2 把s消除
+
         // current g,
         // 获取这个点 Point& p = NodeMap[endPos]
         if (NodeMap[endPos].g_2_min <= g_m[1])
             continue;
-#pragma endregion
 
-#pragma region 弹出的s等于终点的情况，在OPEN中删除被支配的列表
         // 如果弹出的格网是终点
         if (current.getIndex() == endPos)
         {
+            NodeMap[endPos].g_2_min = g_m[1];
             // 这个文件用来统计遍历的格网数
             ofstream log_size;
             // 因为终点的H为0，所以终点的F_m就等于G_m
@@ -185,19 +163,9 @@ front_type Multi_Astar::search2(H3Index startPos, H3Index endPos, int& maxSize, 
                 log_size.close();
             }
             cout << "路径数：" << COSTS.size() << endl;
-#pragma region 清除在OPEN中被支配的数据
-            //// 清除在OPEN中被支配的数据
-            //decltype(OPEN) temp;
-            //for (auto& [p, v] : OPEN) {
-            //    point_type point_f_m(v.first.begin(), v.first.end());
-            //    if (point_g_m.dominates(point_f_m))
-            //        continue;
-            //    temp.insert(make_pair(p, v));
-            //}
-            //OPEN = move(temp);
-#pragma endregion
+            continue;
         }
-#pragma endregion 
+
 
 #pragma region 弹出的点不是终点，则需要遍历邻居
         else
@@ -206,6 +174,7 @@ front_type Multi_Astar::search2(H3Index startPos, H3Index endPos, int& maxSize, 
             // 2. 当前的g
             // 3. endpos终点
             // 4. para 弹出格网的para
+            NodeMap[current.getIndex()].g_2_min = g_m[1];
             NextStep2(current, g_m, endPos, Size, para);
         //cout << "current Point " << current.getIndex() << "(" << g_m[0] << "," << g_m[1] << ");;;;;;;;;;;PriorityQueueSize:" << OPEN.size() << ";;;;;;;;result : " << COSTS.size() << endl;
     }
@@ -811,7 +780,7 @@ Point& Multi_Astar::OpenPop(array_type& g_m, Parameter& parameter, int& count) {
     assert(p.op.count(point_g_m) != 0);
     p.cl.insert(make_pair(point_g_m, p.op[point_g_m]));
     p.op.erase(point_g_m);
-#pragma endregion 从op移到cl中
+#pragma endregion 
     // it 是open的迭代器 g, <F, P>
     g_m = it->first;
     parameter = it->second.second;
@@ -823,76 +792,12 @@ Point& Multi_Astar::OpenPop(array_type& g_m, Parameter& parameter, int& count) {
 Point& Multi_Astar::OpenPop2(array_type& g_m, Parameter& parameter, int& count) {
     Util::cnt++;
     count++;
-    // OPEN g,F,Parameter
-    // F,g,Parameter
-    /*pareto::front<double, VectorDimension, pair<array_type, Parameter>> nondominantSet;*/
-    // 遍历OPEN列表,并且插入到非支配向量集。
-    /*for (auto it = OPEN.begin(); it != OPEN.end(); it++)
-        nondominantSet.insert(make_pair(point_type(it->second.first.begin(), it->second.first.end()), make_pair(it->first, it->second.second)));*/
-    // 按照不同分量的优先级排序
-    // F,g,index
-    vector<pair<array_type, pair<array_type, Parameter>>> SortVector(OPEN.begin(), OPEN.end());
-    
-    /*for (auto& [key, value] : nondominantSet)
-        SortVector.push_back(make_pair(key.values(), value));*/
-    // 按F分量来排序，升序
-    //sort(SortVector.begin(), SortVector.end(), CompareUseDr);
-    sort(SortVector.begin(), SortVector.end(), CompareUseDr);
-    // 取最优（最小）的代价向量，也就是第一个，这里是按g来定位
-    auto pair_target = make_pair(SortVector[0].second.first, make_pair(SortVector[0].first, SortVector[0].second.second));
-    auto target = pair_target;
-    //auto target = SortVector[0];Z
-#pragma region python可视化
-    //****************************python可视化****************************
-    //vector<double> show_first;
-    //vector<double> show_second;
-    //// g,F P
-    //for (auto it = OPEN.begin(); it != OPEN.end(); it++)
-    //{
-    //    double x = *(it->second.first.begin());
-    //    show_first.push_back(x);
-    //    auto temp1 = it->second.first.end() - 1;
-    //    show_second.push_back(*temp1);
-    //}
-
-    //double first[] = { *target.first.begin() };
-    //auto temp2 = target.first.end() - 1;
-    //double second[] = { *temp2 };
-    //int N = show_first.size();
-    //if (Util::cnt < 20)
-    //{
-    //    string cmd = "plt.scatter(";
-    //    string s1 = Util::arr_to_string_list(&show_first[0], show_first.size());
-    //    string s2 = Util::arr_to_string_list(&show_second[0], show_second.size());
-    //    cmd = cmd + s1 + "," + s2 + ")";
-    //    PyRun_SimpleString(cmd.c_str());
-    //    // plt.scatter(x, y, marker = "^")
-    //    // 
-    //    // 语句2 
-    //    string cmd_target = "plt.scatter(" + to_string(first[0]) + "," + to_string(second[0]) + ","
-    //        + "marker = \"^\"" + ")";
-    //    PyRun_SimpleString(cmd_target.c_str());
-
-    //    PyRun_SimpleString("plt.ylim(4000,6000)");
-
-    //    //plt.savefig("D:/桌面/test.png")
-    //    string path_ = "D:/open_select_pop/iter" + to_string(Util::cnt) + ".png";
-    //    // plt.savefig(" ")
-    //    string cmd2 = "plt.savefig(\"" + path_ + "\")";
-    //    PyRun_SimpleString(cmd2.c_str());
-    //    PyRun_SimpleString("plt.close()");
-
-    //    //Py_Finalize();
-    //    //system("pause");
-    //}
-
-    //**************************************pyhton 可视化****************************
-#pragma endregion 
-    ofstream log_test;
-    log_test.open("D:/桌面/test0927.txt", ios::app);
-    log_test << Util::PrintCurrentTime();
-    log_test.close();
-#pragma region 找到弹出的那个点
+    // f g p
+    vector<pair<array_type, pair<array_type, Parameter>>> nondominantVector;
+    for (auto& [key, value] : OPEN)
+        nondominantVector.push_back(make_pair(value.first, make_pair(key, value.second)));
+    sort(nondominantVector.begin(), nondominantVector.end(), CompWithoutDirectionComparison);
+    auto target = nondominantVector[0];
     auto end = OPEN.upper_bound(target.second.first);
     auto it = OPEN.find(target.second.first);
     // g,F,Parameter
@@ -907,23 +812,19 @@ Point& Multi_Astar::OpenPop2(array_type& g_m, Parameter& parameter, int& count) 
     //cout << "0x" << std::hex << it->second.second << std::dec << "(" << (it->second.first)[0] << "," << (it->second.first)[1] << ")";
     // 找到这个格网
     Point& p = NodeMap[it->second.second.getIndex()];
-#pragma endregion 找到弹出的那个点
-
-#pragma region 从op 移到 cl中
-    //将这个点的g_m从Gop移动到Gcl
-    point_type point_g_m(it->first.begin(), it->first.end());
+    // 将这个点的g_m从Gop移动到Gcl
+        point_type point_g_m(it->first.begin(), it->first.end());
     // g_m, 父节点;
     assert(p.op.count(point_g_m) != 0);
     p.cl.insert(make_pair(point_g_m, p.op[point_g_m]));
     p.op.erase(point_g_m);
-#pragma endregion 
-
     // it 是open的迭代器 g, <F, P>
     g_m = it->first;
     parameter = it->second.second;
     //在Open列表中删除被取的三元组
     OPEN.erase(it);
     return p;
+
 }
 
 void Multi_Astar::NextStep(Point& current, array_type current_g, H3Index goal, int& Size, Parameter& parameter)
@@ -956,7 +857,7 @@ void Multi_Astar::NextStep(Point& current, array_type current_g, H3Index goal, i
         point_type point_g_m(g_m.begin(), g_m.end());
 
 
-#pragma region case1: m没被遍历过
+#pragma region case1: 新点
         // 如果m是新点
         if (m.op.empty() && m.cl.empty()) {
             // 如果F_m被COSTS支配，那么跳过它
@@ -986,7 +887,7 @@ void Multi_Astar::NextStep(Point& current, array_type current_g, H3Index goal, i
         }
 #pragma endregion
 
-#pragma region case3：m不被g支配
+#pragma region case3：新的g
         // 如果不是新点也不相等，那么需要满足
         // g_m不被op与cl中其他向量支配
         else if (!m.op.dominates(point_g_m) && !m.cl.dominates(point_g_m)) {
@@ -1032,7 +933,7 @@ void Multi_Astar::NextStep2(Point& current, array_type current_g, H3Index goal, 
 {
     // 遍历邻接点
     // it == H3Index;
-    current.g_2_min = current_g[1];
+    //current.g_2_min = current_g[1];
 
     for (auto it = current.neighbours.begin(); it != current.neighbours.end(); it++) {
         
@@ -1052,21 +953,19 @@ void Multi_Astar::NextStep2(Point& current, array_type current_g, H3Index goal, 
         point_type point_g_m(g_m.begin(), g_m.end());
 
         //  情况1：g_m存在于op和cl中
-        if (m.op.contains(point_g_m) || m.cl.contains(point_g_m)) {
-            if (m.op.contains(point_g_m)) {
-                para.setIndex(current.getIndex());
-                m.op.find(point_g_m)->second = para;
-                continue;
-            }
-            else {
-                para.setIndex(current.getIndex());
-                m.cl.find(point_g_m)->second = para; para.setIndex(current.getIndex());
-                m.cl.find(point_g_m)->second = para;
-                continue;
-            }
+        if (m.op.contains(point_g_m)) {
+            para.setIndex(current.getIndex());
+            m.op.find(point_g_m)->second = para;
+            continue;
+        }
+        else if (m.cl.contains(point_g_m)) {
+            para.setIndex(current.getIndex());
+            m.cl.find(point_g_m)->second = para; para.setIndex(current.getIndex());
+            m.cl.find(point_g_m)->second = para;
+            continue;
         }
         //  情况2：被g支配
-        else if ( m.g_2_min <= g_m[1] || m.op.dominates(point_g_m))
+        if ( NodeMap[m.getIndex()].g_2_min <= g_m[1] || m.op.dominates(point_g_m))
             continue;
        
         // 计算h_m:

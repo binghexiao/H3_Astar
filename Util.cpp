@@ -594,13 +594,13 @@ vector<pair<vector<H3Index>, point_type>> Util::MultiObjectMultiHierarchySearch(
     auto result = alg.search(start, end, maxSize, Size);
     fin = clock();
     time = (double)(fin - st) / CLOCKS_PER_SEC;
-    cout << "大小" << result.size() << endl;
+    /*cout << "大小" << result.size() << endl;
     for (auto it = result.begin(); it != result.end(); it++)
     {
         log_cost.open("D:/桌面/costs.txt", ios::app);
         log_cost << "路径 目标1:" << *it->first.begin() << endl;
         log_cost << "路径 目标2:" << *(it->first.end() -1) << endl;
-    }
+    }*/
     // 注意起点和终点颠倒，因为需要倒序得到路径
     auto rnt = getPathList(PointMap[targetLevel], DEM[targetLevel], Comprehensive[targetLevel], end, start);
     return rnt;

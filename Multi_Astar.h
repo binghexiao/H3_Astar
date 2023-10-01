@@ -15,7 +15,20 @@ using namespace std;
 static std::initializer_list<bool> direction_comparison;
 //extern ofstream log_size;
 
-
+//struct Cmp
+//{
+//	const bool operator () (const pair<array_type, pair<array_type, Parameter>>& a,
+//		const pair<array_type, pair<array_type, Parameter>>& b) const
+//	{
+//		array_type x = a.second.first;
+//		array_type y = b.second.first;
+//		if (x[0] == y[0])
+//			return x[1] < y[1];// by xgg 第一个相同，就按第二个排
+//		else
+//			return x[0] < y[0];// by xgg 第一个不相同，就按第一个排
+//		return x < y;
+//	}
+//};
 class Multi_Astar {
 public:
 	Multi_Astar(H3_P&, std::initializer_list<bool>, H3_D&, H3_D&, int);
@@ -27,6 +40,7 @@ private:
 	front_type COSTS;
 	// g,F,含当前节点的Parameter
 	multimap<array_type, pair<array_type, Parameter>> OPEN; //待遍历的节点	
+	//multimap<array_type, pair<array_type, Parameter>, Cmp> OPEN; //待遍历的节点	
 	// 格网地图
 	H3_P& NodeMap;
 
