@@ -591,7 +591,7 @@ vector<pair<vector<H3Index>, point_type>> Util::MultiObjectMultiHierarchySearch(
     st = clock();
     // maxsize Max_of_the_Number_of_Open_Grid open队列的最大深度
     // size Traverses_the_Number_of_Grid 遍历的格网数
-    auto result = alg.search(start, end, maxSize, Size);
+    auto result = alg.search2(start, end, maxSize, Size);
     fin = clock();
     time = (double)(fin - st) / CLOCKS_PER_SEC;
     /*cout << "大小" << result.size() << endl;
