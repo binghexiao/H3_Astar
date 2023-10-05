@@ -140,6 +140,7 @@ void MultiObjectVsSingleObject() {
     // string filepath = "C:\\Users\\69025\\Desktop\\路径规划\\论文实验\\英文论文实验\\改进算法后实验结果\\实验数据_10.csv";
     //string filepath = "D:/桌面/路径规划/已有资料/改进算法后实验结果/实验数据_10.csv";
     string filepath = "D:/桌面/966数据_10.csv";
+    //string filepath = "D:/桌面/小数据.csv";
     // string m_filepath = "C:\\Users\\69025\\Desktop\\路径规划\\论文实验\\英文论文实验\\改进算法后实验结果\\other_compact_h3_res=10_算法用.csv";
     //string m_filepath = "D:\\桌面\\改进算法后实验结果\\other_compact_h3_res=10_算法用.csv";
     string m_filepath = "D:/桌面/路径规划/已有资料/改进算法后实验结果/other_compact_h3_res=10_算法用.csv";
@@ -149,7 +150,11 @@ void MultiObjectVsSingleObject() {
     // 读取多层次格网数据，并生成多层次格网地图
     //Util::MultiObjectMultiHierarchy(PointMap, DEM, Comprehensive, Factor, level, m_filepath);
     // 多粒度模型
-    // 
+    // 超小数据的起始点
+    /*H3Index h3_start = 0x8a4008b9d507fff;
+    H3Index h3_end = 0x8a4008b9d437fff;*/
+    /*H3Index h3_end = 0x8a4008b9d49ffff;*/
+    
      //部分数据的开始点和结束点
     H3Index h3_start = 0x8a4008b9d06ffff;
     H3Index h3_end = 0x8a4008b9eadffff;

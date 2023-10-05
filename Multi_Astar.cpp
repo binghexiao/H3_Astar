@@ -132,50 +132,45 @@ front_type Multi_Astar::search2(H3Index startPos, H3Index endPos, int& maxSize, 
         // 如果弹出的格网是终点
         if (current.getIndex() == endPos)
         {
-            NodeMap[endPos].g_2_min = g_m[1];
+            NodeMap[endPos].g_2_min = min(g_m[1], NodeMap[endPos].g_2_min);
             // 这个文件用来统计遍历的格网数
-            ofstream log_size;
+            //ofstream log_size;
             // 因为终点的H为0，所以终点的F_m就等于G_m
             point_type point_g_m(g_m.begin(), g_m.end());
             // 记录路径
             // 
             COSTS.insert(make_pair(point_g_m, para));
-            if (COSTS.size() == 1) {
-                log_size.open("D:/桌面/size_and_maxSize0927.txt", ios::app);
-                /*cout << "找到第一条路径之前遍历的格网数" << Util::cnt << endl;
-                cout << "找到第一条路径之前遍历的格网数大" << Size << endl;
-                log_size << "找到第一条路径之前遍历的格网数" << Util::cnt << endl;
-                cout << "找到第一条路径之前最大OPEN队列深度" << maxSize << endl;;
-                log_size << "找到第一条路径之前最大OPEN队列深度" << maxSize << endl;*/
+            //if (COSTS.size() == 1) {
+            //    log_size.open("D:/桌面/size_and_maxSize0927.txt", ios::app);
+            //    /*cout << "找到第一条路径之前遍历的格网数" << Util::cnt << endl;
+            //    cout << "找到第一条路径之前遍历的格网数大" << Size << endl;
+            //    log_size << "找到第一条路径之前遍历的格网数" << Util::cnt << endl;
+            //    cout << "找到第一条路径之前最大OPEN队列深度" << maxSize << endl;;
+            //    log_size << "找到第一条路径之前最大OPEN队列深度" << maxSize << endl;*/
 
-                /*log_size.close();
-                cout << "cnt" << Util::cnt << endl;
-                cout << "count" << count << endl;*/
+            //    /*log_size.close();
+            //    cout << "cnt" << Util::cnt << endl;
+            //    cout << "count" << count << endl;*/
 
-                cout << "wbb遍历格网数Size = " << Size << endl;
-                cout << "改进后的cnt = " << Util::cnt << endl;
-                cout << "找到第一条路的最大OPEN队列深度" << maxSize << endl;
+            //    cout << "wbb遍历格网数Size = " << Size << endl;
+            //    cout << "改进后的cnt = " << Util::cnt << endl;
+            //    cout << "找到第一条路的最大OPEN队列深度" << maxSize << endl;
 
-                log_size << "时间戳： " << Util::PrintCurrentTime();
-                log_size << "wbb遍历格网数Size = " << Size << endl;
-                log_size << "改进后的cnt = " << Util::cnt << endl;
-                log_size << "找到第一条路的最大OPEN队列深度" << maxSize << endl;
-                log_size.close();
-            }
+            //    log_size << "时间戳： " << Util::PrintCurrentTime();
+            //    log_size << "wbb遍历格网数Size = " << Size << endl;
+            //    log_size << "改进后的cnt = " << Util::cnt << endl;
+            //    log_size << "找到第一条路的最大OPEN队列深度" << maxSize << endl;
+            //    log_size.close();
+            //}
             cout << "路径数：" << COSTS.size() << endl;
             continue;
         }
 
 
 #pragma region 弹出的点不是终点，则需要遍历邻居
-        else
-            // 参数说明：
-            // 1. current 当前弹出的格网
-            // 2. 当前的g
-            // 3. endpos终点
-            // 4. para 弹出格网的para
-            NodeMap[current.getIndex()].g_2_min = g_m[1];
-            NextStep2(current, g_m, endPos, Size, para);
+            
+        NodeMap[current.getIndex()].g_2_min = min(g_m[1], NodeMap[current.getIndex()].g_2_min);
+        NextStep2(current, g_m, endPos, Size, para);
         //cout << "current Point " << current.getIndex() << "(" << g_m[0] << "," << g_m[1] << ");;;;;;;;;;;PriorityQueueSize:" << OPEN.size() << ";;;;;;;;result : " << COSTS.size() << endl;
     }
 #pragma endregion 
@@ -241,36 +236,36 @@ front_type Multi_Astar::search(H3Index startPos, H3Index endPos, int& maxSize, i
         if (current.getIndex() == endPos)
         {
             // 这个文件用来统计遍历的格网数
-            ofstream log_size;
+            //ofstream log_size;
             // 因为终点的H为0，所以终点的F_m就等于G_m
             point_type point_g_m(g_m.begin(), g_m.end());
             // 记录路径
             // 
             COSTS.insert(make_pair(point_g_m, para));
-            if (COSTS.size() == 1) {
-                log_size.open("D:/桌面/size_and_maxSize.txt", ios::app);
-                /*cout << "找到第一条路径之前遍历的格网数" << Util::cnt << endl;
-                cout << "找到第一条路径之前遍历的格网数大" << Size << endl;
-                log_size << "找到第一条路径之前遍历的格网数" << Util::cnt << endl;
-                cout << "找到第一条路径之前最大OPEN队列深度" << maxSize << endl;;
-                log_size << "找到第一条路径之前最大OPEN队列深度" << maxSize << endl;*/
-                
-                /*log_size.close();
-                cout << "cnt" << Util::cnt << endl;
-                cout << "count" << count << endl;*/
+            //if (COSTS.size() == 1) {
+            //    log_size.open("D:/桌面/size_and_maxSize.txt", ios::app);
+            //    /*cout << "找到第一条路径之前遍历的格网数" << Util::cnt << endl;
+            //    cout << "找到第一条路径之前遍历的格网数大" << Size << endl;
+            //    log_size << "找到第一条路径之前遍历的格网数" << Util::cnt << endl;
+            //    cout << "找到第一条路径之前最大OPEN队列深度" << maxSize << endl;;
+            //    log_size << "找到第一条路径之前最大OPEN队列深度" << maxSize << endl;*/
+            //    
+            //    /*log_size.close();
+            //    cout << "cnt" << Util::cnt << endl;
+            //    cout << "count" << count << endl;*/
 
-                cout << "wbb遍历格网数Size = " << Size << endl;
-                cout << "改进后的cnt = " << Util::cnt << endl;
-                cout << "找到第一条路的最大OPEN队列深度" << maxSize << endl;
+            //    cout << "wbb遍历格网数Size = " << Size << endl;
+            //    cout << "改进后的cnt = " << Util::cnt << endl;
+            //    cout << "找到第一条路的最大OPEN队列深度" << maxSize << endl;
 
-                log_size << "时间戳： " << Util::PrintCurrentTime();
-                log_size << "wbb遍历格网数Size = " << Size << endl;
-                log_size << "改进后的cnt = " << Util::cnt << endl;
-                log_size << "找到第一条路的最大OPEN队列深度" << maxSize << endl;
-                log_size.close();
-            }
+            //    log_size << "时间戳： " << Util::PrintCurrentTime();
+            //    log_size << "wbb遍历格网数Size = " << Size << endl;
+            //    log_size << "改进后的cnt = " << Util::cnt << endl;
+            //    log_size << "找到第一条路的最大OPEN队列深度" << maxSize << endl;
+            //    log_size.close();
+            //}
             cout << "路径数：" << COSTS.size() << endl;
-            log_size << "路径数：" << COSTS.size() << endl;
+            //log_size << "路径数：" << COSTS.size() << endl;
             //cout << COSTS
             // 清除在OPEN中被支配的数据
             decltype(OPEN) temp;
@@ -753,10 +748,10 @@ Point& Multi_Astar::OpenPop(array_type& g_m, Parameter& parameter, int& count) {
 
     //**************************************pyhton 可视化****************************
 #pragma endregion 
-    ofstream log_test;
+   /* ofstream log_test;
     log_test.open("D:/桌面/test0927.txt", ios::app);
     log_test << Util::PrintCurrentTime();
-    log_test.close();
+    log_test.close();*/
     #pragma region 找到弹出的那个点
     auto end = OPEN.upper_bound(target.second.first);
     auto it = OPEN.find(target.second.first);
@@ -792,6 +787,14 @@ Point& Multi_Astar::OpenPop(array_type& g_m, Parameter& parameter, int& count) {
 Point& Multi_Astar::OpenPop2(array_type& g_m, Parameter& parameter, int& count) {
     Util::cnt++;
     count++;
+    /*ofstream log_open_xgg;
+    log_open_xgg.open("D:/桌面/open_xgg_1005.txt", ios::app);
+    for (auto& [k, v] : OPEN) {
+        log_open_xgg << "[" << "(" << *k.begin() << ", " << *(k.end() - 1) << "), "
+            << "(" << *v.first.begin() << ", " << *(v.first.end() - 1) << "), "
+            << hex << v.second.getIndex() << "]" << endl;
+    }
+    log_open_xgg << endl;*/
     // f g p
     vector<pair<array_type, pair<array_type, Parameter>>> nondominantVector;
     for (auto& [key, value] : OPEN)
@@ -806,6 +809,13 @@ Point& Multi_Astar::OpenPop2(array_type& g_m, Parameter& parameter, int& count) 
             break;
         it++;
     }
+    /*og_open_xgg << "弹出的三元组：" << endl;
+    log_open_xgg << "[" << "(" << *it->first.begin() << ", " << *(it->first.end() - 1) << "), "
+        << "(" << *it->second.first.begin() << ", " << *(it->second.first.end() - 1) << "), "
+        << hex << it->second.second.getIndex() << "]"
+        << endl
+        << endl;
+    log_open_xgg.close();*/
     // 依据H3index 找到那个点
     assert(it != end);
     // 输出 index F[0] F[1]
@@ -813,7 +823,7 @@ Point& Multi_Astar::OpenPop2(array_type& g_m, Parameter& parameter, int& count) 
     // 找到这个格网
     Point& p = NodeMap[it->second.second.getIndex()];
     // 将这个点的g_m从Gop移动到Gcl
-        point_type point_g_m(it->first.begin(), it->first.end());
+    point_type point_g_m(it->first.begin(), it->first.end());
     // g_m, 父节点;
     assert(p.op.count(point_g_m) != 0);
     p.cl.insert(make_pair(point_g_m, p.op[point_g_m]));
@@ -842,6 +852,10 @@ void Multi_Astar::NextStep(Point& current, array_type current_g, H3Index goal, i
         bool flag = true;
         auto para = parameter;
         array_type g_m = calG(current_g, current.getIndex(), *it, flag, para);
+        /*array_type g_m;
+        for (int i = 0; i < VectorDimension; i++)
+            g_m[i] = g_n[i] + current_g[i];*/
+        
         // 需要排查邻接点是否可通行
         if (!flag)
             continue;
@@ -944,8 +958,13 @@ void Multi_Astar::NextStep2(Point& current, array_type current_g, H3Index goal, 
         // ============================================================================
         // 计算g_m:
         bool flag = true;
+        // 令para为父节点的参数
         auto para = parameter;
+        // para传给calG,返回的时候就是孩子的参数，后面在OPEN和op中固定住。
         array_type g_m = calG(current_g, current.getIndex(), *it, flag, para);
+        /*array_type g_m;
+        for (int i = 0; i < VectorDimension; i++)
+            g_m[i] = g_n[i] + current_g[i];*/
         // 需要排查邻接点是否可通行
         if (!flag)
             continue;
@@ -960,8 +979,7 @@ void Multi_Astar::NextStep2(Point& current, array_type current_g, H3Index goal, 
         }
         else if (m.cl.contains(point_g_m)) {
             para.setIndex(current.getIndex());
-            m.cl.find(point_g_m)->second = para; para.setIndex(current.getIndex());
-            m.cl.find(point_g_m)->second = para;
+            m.cl.find(point_g_m)->second = para; 
             continue;
         }
         //  情况2：被g支配
@@ -1123,11 +1141,18 @@ array_type Multi_Astar::calG(array_type& parent_g, H3Index parent, H3Index curre
         parameter.avg_grad = parameter.total_grad / parameter.grid_num;
         parameter.avg_comprehensive = parameter.total_comprehensive / parameter.grid_num;
         parameter.distance += distance;
+       
+        parameter.g1 = parent_g[0] + Util::round(2 * distance / (Comprehensive[parent] + Comprehensive[current]), 0);
+        parameter.g2 = parent_g[1] + Util::round(distance / grad, 0);
         //res[0] = parent_g[0] + distance;
         // res[1] = parent_g[1] + Util::calGridNum(parent, current) * 100;
         //res[1] = parent_g[1] + distance;
-        res[0] = Util::round(parameter.distance / parameter.avg_comprehensive, 0);
-        res[1] = Util::round(parameter.distance / parameter.avg_grad, 0);
+        /*res[0] = Util::round(parameter.distance / parameter.avg_comprehensive, 0);
+        res[1] = Util::round(parameter.distance / parameter.avg_grad, 0);*/
+        res[0] = Util::round(parameter.g1, 0);
+        /*res[0] = Util::round(2 * distance / (Comprehensive[parent] + Comprehensive[current]), 0);
+        res[1] = Util::round( distance / grad, 0);*/
+        res[1] = Util::round(parameter.g2, 0);
         // 返回值
         return res;
     }

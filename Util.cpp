@@ -695,9 +695,14 @@ point_type Util::calEdgeCost(H3_D& DEM, H3_D& Comprehensive, Parameter parent, H
     parent.grid_num--;
     parent.avg_grad = parent.total_grad / parent.grid_num;
     parent.avg_comprehensive = parent.total_comprehensive / parent.grid_num;
-
-    res[0] = Util::round(parent.distance / parent.avg_comprehensive, 0);
-    res[1] = Util::round(parent.distance / parent.avg_grad, 0);
+    parent.g1 -= Util::round( 2 * distance / (Comprehensive[parent.getIndex()] + Comprehensive[current]), 0);
+    parent.g2 -= Util::round(distance / grad, 0);
+    //res[0] = Util::round(2 * distance / (Comprehensive[parent.getIndex()] + Comprehensive[current]), 0);
+    /*res[0] = Util::round(parent.distance / parent.avg_comprehensive, 0);
+    res[1] = Util::round(parent.distance / parent.avg_grad, 0);*/
+    //res[1] = Util::round(distance / grad, 0);
+    res[0] = Util::round(parent.g1, 0);
+    res[1] = Util::round(parent.g2, 0);
     // ·µ»ØÖµ
     return res;
 }

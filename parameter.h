@@ -15,6 +15,8 @@ public:
 	double avg_grad = 0;
 	double avg_comprehensive = 0;
 	int grid_num = 0;
+	double g1;
+	double g2;
 
 	H3Index getIndex() {
 		return index;
